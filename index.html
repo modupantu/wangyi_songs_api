@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>歌曲播放</title>
+    <script src="js/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            text-align: center;
+        }
+        li.img{
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            margin: 20px auto;
+            outline: none;
+        }
+        li.img img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            outline:none;
+        }
+
+        .name {
+            padding-top: 10px;
+            font-size: 24px;
+        }
+
+        .author {
+            padding-top: 10px;
+            font-size: 14px;
+        }
+
+        .audio {
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            background: #ccc;
+        }
+        .audio audio{
+            width: 100%;
+            background: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div><a href="list.html">后退</a></div>
+    </header>
+    <div id="content">
+
+    </div>
+    <script>
+        $(function() {
+            var str = '';
+            var url = location.search;
+            var songsId = url.substring(7);
+            songsId=decodeURI(songsId)
+            var songs;
+            $.ajax({
+                type: 'POST',
+                //async: false,
+                url: 'https://api.hibai.cn/api/index/index',
+                data: { "TransCode": "020112", "OpenId": "123456789", "Body": { "SongListId": "141998290" } },
+                success: function(data) {
+                    songs = data.Body;
+                    for (var item in songs) {
+                        var element = songs[item];
+                        if (songsId == element.title) {
+                            str += '<ul>';
+                            str += ' <li class="name">' + element.title + '</li>';
+                            str += `<li class="author">${element.author}</li>`;
+                            str += '<li class="img"><img src=' + element.pic + '></li>';
+                            str += '<li class="audio"><audio id="audio" src=' + element.url + ' controls></audio></li>';
+                            str += '</ul>';
+                        }
+                    }
+                    $("#content").append(str);
+                },
+                error: function(err) {
+                    console.log(err)
+                }               
+            })
+        })
+    </script>
+</body>
+
+</html>

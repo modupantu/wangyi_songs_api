@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery.min.js"></script>
+    <title>搜索接口</title>
+</head>
+
+<body>
+    <!-- 接口音乐无法播放 -->
+    <div id="container"></div>
+    
+    <script>
+        $(function () {
+
+            var value = '后来';
+            value = decodeURI(value);
+            str = "";
+            $.ajax({
+                type: 'get',
+                url: `http://musicapi.leanapp.cn/search?keywords=${decodeURI(value)}`,
+                crossDomain: true,
+                success: function (data) {
+                    if (data.code == 200) {
+                        var songs = data.result.songs;
+                        for (var key in songs) {
+                            var json_s = songs[key];
+                            console.log(json_s);
+                            str += '<ul>';
+                            str += `<li>${json_s.name}</li>`;
+                            str += '</ul>';
+                        }
+                    }
+                    $("#container").append(str);
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+
+            })
+          
+          
+            
+        })
+    </script>
+</body>
+
+</html>
